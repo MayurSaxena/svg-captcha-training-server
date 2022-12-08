@@ -1,0 +1,12 @@
+doctype html
+html
+head
+title=Login
+body
+    form(action='/login',method='post')
+        input(type='text',name='username',id='username',placeholder="Username")
+        input(type='password',name='password',id='password',placeholder="Password")
+        input(type='text',name='captcha-ans',id='captcha-ans',placeholder="CAPTCHA Answer")
+        input(type='submit',id='submit-btn', value='Log In')
+    
+    !=pic

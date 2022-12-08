@@ -17,10 +17,7 @@ router.get('/', async function(req, res, next) {
   if (req.query.length) {
     captchaLength = req.query.length
   }
-  
-  //svgCaptcha.options.width=150 + ((captchaLength - 5) * 25)
-  //svgCaptcha.options.height=100
-  
+   
   var captcha = svgCaptcha.create({size: getRandomInt(1,8),
                                    color: getRandomInt(0,1) ? false : true,
                                    //background: '#cc9966',
@@ -40,10 +37,27 @@ router.get('/', async function(req, res, next) {
 
   }
 
+});
 
+router.get('/login', async function(req, res, next) {
+  var captcha = svgCaptcha.create({size: getRandomInt(5,8),
+    color: true,
+    ignoreChars: 'lI',
+    //background: '#cc9966',
+    noise: getRandomInt(2,3)});
+  req.session.captcha = captcha.text;
+  res.render('login', {pic: captcha.data,})
+});
 
-
-
+router.post('/login', async function(req, res, next) {
+  console.log(`CAPTCHA answer is ${req.session.captcha}, received ${req.body['captcha-ans']}`);
+  if ((req.body.username == 'admin') && (req.body.password == 'crabmin') && (req.body['captcha-ans'] == req.session.captcha)) {
+    res.sendStatus(200);
+  }
+  else {
+    res.sendStatus(403);
+  }
+  
 });
 
 module.exports = router;
